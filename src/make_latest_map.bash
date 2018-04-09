@@ -8,8 +8,8 @@ EXIT_URL=https://check.torproject.org/exit-addresses
 PLOT_FILE=/webpage/root/lastb.html
 STATS_FILE=/webpage/root/lastb_stats.txt
 
-source ../lastbmap_venv/bin/activate
+source $ROOT/lastbmap_venv/bin/activate
 wget $EXIT_URL -O $EXIT_FILE
-lastb -F -i -w | ./lastb_stdout_into_db.py $LASTB_DB $GEO_DB -t $EXIT_FILE
-./plot_from_db.py $LASTB_DB $PLOT_FILE
-./stats_from_db.py $LASTB_DB 1> $STATS_FILE
+lastb -F -i -w | $ROOT/src/lastb_stdout_into_db.py $LASTB_DB $GEO_DB -t $EXIT_FILE
+$ROOT/src/plot_from_db.py $LASTB_DB $PLOT_FILE
+$ROOT/src/stats_from_db.py $LASTB_DB 1> $STATS_FILE
