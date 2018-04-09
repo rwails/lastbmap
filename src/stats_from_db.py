@@ -28,32 +28,39 @@ def main(args):
     num_tor = len(df[df.is_tor_exit == True])
     pct_tor = (float(num_tor) / num_attempts) * 100.
 
-
+    print("Report generated on:\t{}".format(datetime.now()))
     print("History starts on:\t{}".format(first_time))
     print("Most recent bad login attempt:\t{}".format(last_time))
     print("Length of history:\t{}".format(delta))
 
     print("Total bad login attempts:\t{}".format(len(df)))
 
-    print("Total from Tor relays: {} / {} ({} %)".format(num_tor, num_attempts,
-                                                         pct_tor))
+    print("Total from Tor relays: {} / {} ({:2.3f} %)".format(num_tor,
+                                                              num_attempts,
+                                                              pct_tor))
 
-    print("Mean attempt rate (#/min):\t{}".format(len(df) / delta_min))
+    print("Mean attempt rate (#/min):\t{:2.3f}".format(len(df) / delta_min))
 
     print("\n* Top {} Usernames by Attempt (w/ count) *\n".format(N))
-    print(df.groupby('username').size().nlargest(N))
+    top_user = pd.DataFrame(df.groupby('username').size().nlargest(N))
+    top_user.columns = ['count']
+    top_user["pct"] = (top_user / num_attempts) * 100
+    print(top_user)
 
     print("\n* Top {} Countries by Attempt (w/ count) *\n".format(N))
-    print(df.groupby('country').size().nlargest(N))
+    top_country = pd.DataFrame(df.groupby('country').size().nlargest(N))
+    top_country.columns = ['count']
+    top_country["pct"] = (top_country / num_attempts) * 100
+    print(top_country)
 
     print("\n* Top {} IP Addresses by Attempt (w/ count) *\n".format(N))
     rows = []
     for ipaddr, count in df.groupby('ipaddr').size().nlargest(N).items():
         s = socket.inet_ntoa(struct.pack('!L', ipaddr))
-        rows.append((s, count))
+        rows.append((s, count, count * 100 / num_attempts))
 
     top_ips = pd.DataFrame.from_records(rows)
-    top_ips.columns = ["ipaddr", "count"]
+    top_ips.columns = ["ipaddr", "count", "pct"]
     print(top_ips)
 
 def parse_args():
