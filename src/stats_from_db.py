@@ -10,7 +10,6 @@ import pandas as pd
 from common import *
 
 N = 30
-ISO_TIME_FMT = "%Y-%m-%dT%H:%M:%S%z"
 
 def main(args):
     contents = read_lastb_db_contents(args.lastb_db_filename)
@@ -22,7 +21,7 @@ def main(args):
     last_time = dateutil.parser.parse(df['login_time'].max())
 
     delta = last_time - first_time
-    delta_min = delta.seconds / 60.0
+    delta_hour = delta.days * 24.0 + delta.seconds / 3600.0
 
     num_attempts = len(df)
     num_tor = len(df[df.is_tor_exit == True])
@@ -39,7 +38,7 @@ def main(args):
                                                               num_attempts,
                                                               pct_tor))
 
-    print("Mean attempt rate (#/min):\t{:2.3f}".format(len(df) / delta_min))
+    print("Mean attempt rate (#/hour):\t{:2.3f}".format(len(df) / delta_hour))
 
     print("\n* Top {} Usernames by Attempt (w/ count) *\n".format(N))
     top_user = pd.DataFrame(df.groupby('username').size().nlargest(N))
