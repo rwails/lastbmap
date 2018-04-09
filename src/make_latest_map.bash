@@ -9,5 +9,5 @@ OUT_FILE=/webpage/root/lastb.html
 
 source ../lastbmap_venv/bin/activate
 wget $EXIT_URL -O $EXIT_FILE
-lastb -F -i -w | ./lastb_stdout_into_db.py $LASTB_DB $GEO_DB -t EXIT_FILE
+lastb -F -i -w | ./lastb_stdout_into_db.py $LASTB_DB $GEO_DB -t $EXIT_FILE
 ./plot_from_db.py $LASTB_DB $OUT_FILE
