@@ -2,7 +2,11 @@
 import argparse
 from datetime import datetime
 import dateutil.parser
+
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
 import pandas as pd
 
 from common import *
