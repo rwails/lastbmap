@@ -11,7 +11,7 @@ STATS_FILE=/webpage/root/lastb_stats.txt
 
 source $ROOT/lastbmap_venv/bin/activate
 wget $EXIT_URL -O $EXIT_FILE
-lastb -F -i -w | $ROOT/src/lastb_stdout_into_db.py $LASTB_DB $GEO_DB -t $EXIT_FILE
+parallel "lastb -F -i -w -f {} | $ROOT/src/lastb_stdout_into_db.py $LASTB_DB $GEO_DB -t $EXIT_FILE" ::: /var/log/btmp*
 $ROOT/src/plot_from_db.py $LASTB_DB $PLOT_FILE
 $ROOT/src/stats_from_db.py $LASTB_DB 1> $STATS_FILE
 $ROOT/src/plot_frq.py $LASTB_DB $FRQ_FILE
